@@ -106,7 +106,15 @@ h1 {
     border-radius: 10px;
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     background-color: #B8621B;
+    margin: 20px;
+}
 
+.alerts-error {
+    width: 300px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    background-color: #B8621B;
     margin: 20px;
 }
 

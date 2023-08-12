@@ -27,6 +27,12 @@ class OrderController extends Controller
         return response()->json($data);
     }
 
+    public function apiOrders()
+    {
+        $latestOrders = Order::with('coffee')->get();
+        return response()->json($latestOrders);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -40,12 +46,22 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        Order::create([
-            "nama"=>$request->nama,
-            "meja"=>$request->meja,
-            "jumlah"=>$request->jumlah,
-            "coffee_id"=>$request->coffee_id,
+
+        $data = $request->validate([
+            'nama' => 'required',
+            'meja' => 'required',
+            'jumlah' => 'required|numeric',
+            'coffee_id' => 'required',
+        ], [
+            "nama.required"=>"Nama Harus Diisi",
+            "meja.required"=>"Meja Harus Diisi",
+            "jumlah.required"=>"Jumlah Harus Diisi",
         ]);
+    
+
+        $order = Order::create($data);
+
+        return response()->json($order);
     }
 
     /**

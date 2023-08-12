@@ -18,6 +18,9 @@
     <div class="alerts" id="toast">
         Terimakasih, Pesanan segera diantar!
     </div>
+    <div class="alerts" id="toast-error">
+      Isi Input Dengan Benar (Refresh Terlebih Dahulu!)
+    </div>
 
     {{-- Jumbotron --}}
         <div>
@@ -59,15 +62,15 @@
                                                     <div class="mb-3">
                                                         <input type="hidden" id="coffee_id" value="{{ $item->id }}" name="coffee_id">
                                                         <label for="nama" class="form-label text-white">Atas Nama</label>
-                                                        <input type="text" class="form-control text-white" id="nama" name="nama" aria-describedby="emailHelp">
+                                                        <input type="text" class="form-control text-white" id="nama" name="nama" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="meja" class="form-label text-white">Nomor Meja</label>
-                                                        <input type="text" class="form-control text-white" name="meja" id="meja">
+                                                        <input type="number" class="form-control text-white" name="meja" id="meja" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="jumlah" class="form-label text-white">Jumlah Pesanan</label>
-                                                        <input type="text" class="form-control text-white" name="jumlah" id="jumlah">
+                                                        <input type="number" class="form-control text-white" name="jumlah" id="jumlah" required>
                                                     </div>
                                                 </div>
                                             <div class="modal-footer">
@@ -105,45 +108,75 @@
   <script src="{{ asset('assets/libs/jquery/dist/jquery.min.js')}}"></script>
   <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
   <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-  <script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.1/socket.io.js"></script>
+  <script type="module">
+    // import io from 'socket.io-client';
 
-    // ini untuk token secara global
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    })
-    // ini untuk modal, dan membuat sebuah permintan ke pesanan
-    $('body').on('click', '.button-add', function(e){
-        e.preventDefault()
-        const modalId = $(this).data('bs-target') 
-        $(modalId).modal('show');
-
-        $(modalId).find('.btn-pesan').one('click', function() {
-                // console.log([coffee_id, nama, meja, jumlah]);
-                $.ajax({
-                    url: 'pesanan',
-                    type: 'POST',
-                    data: {
-                         coffee_id : $(modalId).find('#coffee_id').val(),
-                         nama : $(modalId).find('#nama').val(),
-                         meja : $(modalId).find('#meja').val(),
-                         jumlah : $(modalId).find('#jumlah').val(),
-                    },
-                    success:function(response) {
-                        $(modalId).modal('hide');
-                        
-                        const alert = $('#toast');
-                        alert.addClass('hide');
-
-                        setTimeout(() => {
-                            alert.removeClass('hide');
-                        }, 2000);
-                    }
-                })
-
+        // url dari node js
+        const socket = io('http://localhost:5000')
+        
+        // ini untuk token secara global
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         })
-    })
+        // ini untuk modal, dan membuat sebuah permintan ke pesanan
+        $('body').on('click', '.button-add', function(e){
+            e.preventDefault()
+            const modalId = $(this).data('bs-target') 
+            $(modalId).modal('show');
+
+            $(modalId).find('.btn-pesan').one('click', function() {
+                    // console.log([coffee_id, nama, meja, jumlah]);
+                    $.ajax({
+                        url: 'pesanan',
+                        type: 'POST',
+                        data: {
+                            coffee_id : $(modalId).find('#coffee_id').val(),
+                            nama : $(modalId).find('#nama').val(),
+                            meja : $(modalId).find('#meja').val(),
+                            jumlah : $(modalId).find('#jumlah').val(),
+                        },
+                        success:function(response) {
+                            $(modalId).modal('hide');
+                            $(modalId).find('#coffee_id').val('');
+                            $(modalId).find('#nama').val('');
+                            $(modalId).find('#meja').val('');
+                            $(modalId).find('#jumlah').val('');
+                            
+                            // Kirim data ke WebSocket
+                            socket.emit('Order', response);
+
+                            const alert = $('#toast');
+                            alert.addClass('hide');
+
+                            setTimeout(() => {
+                                alert.removeClass('hide');
+                            }, 2000);
+
+
+                            // console.log(response);
+                        },
+
+                        error: function() {
+                            $(modalId).modal('hide');
+                            $(modalId).find('#coffee_id').val('');
+                            $(modalId).find('#nama').val('');
+                            $(modalId).find('#meja').val('');
+                            $(modalId).find('#jumlah').val('');
+                            const alert = $('#toast-error');
+                            alert.addClass('hide');
+
+                            setTimeout(() => {
+                                alert.removeClass('hide');
+                            }, 2000);
+
+                        }
+                    })
+
+            })
+        })
   </script>
 </body>
 

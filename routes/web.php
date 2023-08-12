@@ -32,8 +32,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('coffees', CoffeeController::class);
         Route::post('/update/{id}' , [CoffeeController::class, 'update']);
         Route::get('/order', [OrderController::class, 'index']);
-        Route::delete('/order/{id}', [OrderController::class, 'destroy']);
+        Route::get('/order/{id}', [OrderController::class, 'destroy']);
         Route::get('/orderList', [OrderController::class, 'data'])->name('orderList');
+        Route::get('/api/orders', [OrderController::class, 'apiOrders']);
     });
 });
 Route::get('/', [LandingController::class, 'index']);
