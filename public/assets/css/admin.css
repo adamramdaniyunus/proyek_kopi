@@ -1,0 +1,19 @@
+/* admin panel */
+
+body {
+    background-color: rgba(0, 0, 0, 1.6);
+    color: #fff;
+}
+
+.aside {
+    background-color: rgba(0, 0, 0, 1.6);
+    border: none;
+}
+
+.app-header {
+    background-color: rgba(0, 0, 0, 1.6);
+}
+
+ul {
+    color: #fff;
+}

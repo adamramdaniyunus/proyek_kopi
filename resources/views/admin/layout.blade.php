@@ -9,6 +9,7 @@
   <title>Admin | KenanganSenja</title>
   <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css')}}" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  {{-- <link rel="stylesheet" href="{{asset('assets/css/admin.css')}}"> --}}
 </head>
 
 <body>
@@ -16,9 +17,9 @@
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
-    <aside class="left-sidebar">
+    <aside class="left-sidebar aside">
       <!-- Sidebar scroll-->
-      <div>
+      <div class="sidebar">
         <div class="brand-logo d-flex align-items-center justify-content-between">
           <a href="/admin" class="text-nowrap logo-img">
             <h4>KenanganSenja</h4>
@@ -62,6 +63,7 @@
                 <span class="hide-menu {{ request()->is('/admin/order') ? 'menu' : '' }}">Pesanan</span>
               </a>
             </li>
+          </ul>
         </nav>
         <!-- End Sidebar navigation -->
       </div>
@@ -72,7 +74,7 @@
     <div class="body-wrapper">
       <!--  Header Start -->
       <header class="app-header">
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar navbar-expand-lg">
           <ul class="navbar-nav">
             <li class="nav-item d-block d-xl-none">
               <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
